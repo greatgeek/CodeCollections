@@ -44,6 +44,7 @@ class Solution {
     
     public ReturnType sum = new ReturnType(0,0);
     
+    // 先序遍历法
     public void process(TreeNode root,int h){
         if(root == null){
             return;

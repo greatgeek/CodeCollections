@@ -104,6 +104,7 @@ class Solution {
         return maxSum;
     }
     
+    // 后序遍历法
     public int process(TreeNode root){
         if(root==null){
             return 0;
