@@ -26,9 +26,9 @@ public class Code_04_SerializeAndReconstructTree {
 	}
 
 	public static Node reconByPreString(String preStr) {
-		String[] values = preStr.split("_");
+		String[] values = preStr.split("_+");
 		Queue<String> queue = new LinkedList<String>();
-		for (int i = 0; i != values.length; i++) {
+		for (int i = 1; i != values.length; i++) {
 			queue.offer(values[i]);
 		}
 		return reconPreOrder(queue);
