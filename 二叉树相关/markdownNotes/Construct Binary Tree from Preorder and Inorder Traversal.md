@@ -147,3 +147,55 @@ class Solution {
     }
 }
 ```
+
+### **1008. Construct Binary Search Tree from Preorder Traversal**
+
+Return the root node of a binary search tree that matches the given preorder traversal.
+
+(Recall that a binary search tree is a binary tree where for every node, any descendant of node.left has a value < node.val, and any descendant of node.right has a value > node.val.  Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
+
+ 
+
+Example 1:
+
+Input: [8,5,1,7,10,12]
+Output: [8,5,10,1,7,null,12]
+
+ 
+
+Note: 
+
+1. 1 <= preorder.length <= 100
+2. The values of preorder are distinct.
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode bstFromPreorder(int[] preorder) {
+        int[] inorder = Arrays.copyOf(preorder,preorder.length);
+        Arrays.sort(inorder);
+        return process(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
+    }
+    
+    public TreeNode process(int[] preorder,int[] inorder,int preL,int preR,int inL,int inR){
+        if(preL>preR || inL>inR) return null;
+        
+        TreeNode root = new TreeNode(preorder[preL]);
+        int len=0;
+        while(inL+len<=inR && inorder[inL+len]!=preorder[preL]){
+            len++;
+        }
+        root.left = process(preorder,inorder,preL+1,preL+len,inL,inL+len-1);
+        root.right = process(preorder,inorder,preL+len+1,preR,inL+len+1,inR);
+        return root;
+    }
+}
+```
