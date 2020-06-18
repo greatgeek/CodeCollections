@@ -1,0 +1,211 @@
+package littleDataStructure;
+
+import java.util.Random;
+
+class Node{
+    int index; // 升序索引
+    int data; // 用于存储数据
+    Node[] level;
+
+    public Node(int data,int level,int index){
+        this.index=index;
+        this.data=data;
+        this.level = new Node[level];
+    }
+}
+
+
+/**
+ * 跳跃表在 Redis 中一个是实现了有序集合键，一个是在集群节点中用作内部数据结构
+ * 对于集合而言操作只有增、删、查
+ *
+ * 平衡二叉树的增、删、查的操作思路都是一致的，即遇到比当前节点值大的走向左子树，比当前节点值小的走向右子树
+ *
+ * 跳跃表也的增、删、查也是如此，当前节点的后继节点比所求节点值大的向下走，比所求节点值小的向右走
+ *
+ * 总结：所有的操作都与查找操作相类似，一切操作基于查找操作。（平衡二叉树、跳跃表，红黑树）
+ */
+public class SkipList{
+    private static final int MAX_LEVEL = 8; // 设置最大高度为 16
+    private Node header; // 头结点，其数据为 Integer.MIN_VALUE
+    private Node tail; // 尾结点，其数据为 Integer.MAX_VALUE
+
+    private Random random = new Random(); // 随机掷硬币
+
+    /**
+     * 初始化时，只有头节点和尾节点
+     */
+    public SkipList(){
+        header = new Node(Integer.MIN_VALUE,MAX_LEVEL,-1);
+        tail = new Node(Integer.MAX_VALUE,MAX_LEVEL,1);
+        for(int i=header.level.length-1;i>=0;i--){
+            header.level[i]=tail;
+        }
+    }
+
+    /**
+     * 查操作
+     * @param data 要查找的数据
+     * @return
+     */
+    public Node find(int data){
+        Node current = header;
+        int n = current.level.length-1;
+
+        while(n>=0 && current.data < data){
+            if(current.level[n].data <data){
+                current = current.level[n];
+            }else if(current.level[n].data > data){
+                n--;
+            }else {
+                return current.level[n];
+            }
+        }
+        return current;
+    }
+
+    /**
+     * 增操作
+     * @param data
+     */
+    public void add(int data){
+        Node preNode = find(data);
+        // 集合不能添加重复节点
+        if(preNode.data!=data){
+            int k=getLevel();
+            Node node = new Node(data,k,preNode.index);
+            dealForAdd(node,preNode.level[0]);
+            Node currNode = preNode.level[0];
+            while (currNode!=null){
+                currNode.index++;
+                currNode=currNode.level[0];
+            }
+        }
+    }
+
+    /**
+     * 删除操作
+     * @param data
+     * @return
+     */
+    public boolean delete(int data){
+        Node node = find(data);
+        if(node.data==data){
+            Node currNode = node.level[0];
+            while (currNode!=null){
+                currNode.index--;
+                currNode=currNode.level[0];
+            }
+            dealForDel(node,node.level[0]);
+        }
+        return false;
+    }
+
+    /**
+     * 通过索引获取元素
+     * @param index
+     * @return
+     */
+    public Node getByIndex(int index){
+        Node curNode = header;
+        while (curNode.index!=index) {
+            curNode=curNode.level[0];
+        }
+        return curNode;
+    }
+
+    /**
+     * 获取插入节点的层级高度
+     * @return
+     */
+    private int getLevel(){
+        int k=1;
+        while(random.nextInt(2)==1) k++;
+        return Math.min(k,MAX_LEVEL);
+    }
+
+    /**
+     * 处理新增加节点的连接关系
+     * @param node
+     * @param succNode
+     */
+    private void dealForAdd(Node node, Node succNode) {
+        int k = node.level.length-1;
+
+        Node currNode = header;
+        int n=currNode.level.length-1;
+        // 在寻找后继节点的过程中，调整连接关系
+        while(n>=0 && currNode!=succNode){
+            if(currNode.level[n].data < succNode.data){
+                currNode=currNode.level[n];
+            }else if(currNode.level[n].data > succNode.data){
+                n--;
+            }else{
+                if (n <= k) {
+                    node.level[n] = succNode;
+                    currNode.level[n] = node;
+                }
+                n--;
+
+            }
+        }
+
+    }
+
+    /**
+     * 处理删除节点的连接关系
+     * @param node
+     * @param succNode
+     */
+    private void dealForDel(Node node,Node succNode){
+        int k = node.level.length-1;
+
+        Node currNode = header;
+        int n=currNode.level.length-1;
+        // 在寻找后继节点的过程中，调整连接关系
+        while(n>=0 && currNode!=node){
+            if(currNode.level[n].data < node.data){
+                currNode=currNode.level[n];
+            }else if(currNode.level[n].data > node.data){
+                n--;
+            }else {
+                if(n<=k){
+                    currNode.level[n]=node.level[n];
+                    node.level[n]=null;
+                }
+                n--;
+
+            }
+        }
+    }
+
+    /**
+     * 打印跳表
+     */
+    public void printSkipList(){
+        int n=header.level.length;
+        for (int i=n-1;i>=0;i--){
+            Node curNode = header.level[i];
+            while(curNode.level[i]!=null){
+                int num = curNode.level[i].index - curNode.index;
+                System.out.printf(curNode.data+"");
+                for (int k=0;k<num;k++){
+                    System.out.printf("#");
+                }
+                curNode=curNode.level[i];
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        SkipList list = new SkipList();
+        int[] array = {3,5,7,8,6,4,9,1,2};
+        for(int x:array){
+            list.add(x);
+        }
+
+        list.printSkipList();
+    }
+
+}
