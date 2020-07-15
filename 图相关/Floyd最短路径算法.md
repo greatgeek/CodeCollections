@@ -1,4 +1,4 @@
-# Floyd 算法
+# Floyd 最短路径算法
 
 一个号称只有5行代码的算法，由1978年图灵奖获得者、斯坦福大学计算机科学教授罗伯特.弗洛伊德命名。在计算机科学中，```Floyd-Warshall```算法是一种在具有正或负边权重的加权图中找到最短路径的算法。该算法运用了动态规划的思想，算法的时间复杂度为$O(n^3)$，空间复杂度为$O(n^2)$
 
@@ -19,3 +19,5 @@ Floyd的核心5行代码：
 ## 参考
 
 [Floyd 算法](https://zhuanlan.zhihu.com/p/72248451)
+
+[Floyd-Warshall算法](https://zh.wikipedia.org/wiki/Floyd-Warshall%E7%AE%97%E6%B3%95)
