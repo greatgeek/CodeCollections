@@ -1,0 +1,56 @@
+# MySQL 常见面试题
+
+
+
+## 数据库三大范式是什么
+
+第一范式：要求要有主键, 每个列都不可再拆分；
+
+第二范式：第二范式是建立在第一范式基础之上,要求数据库中所有非主键字段完全依赖主键, 不能产生部分依赖; **(严格意义上说: 尽量不要使用联合主键)**
+
+第三范式: 建立在第二范式基础之上,要求非主键字段不能产生传递依赖于主键字段.
+
+
+
+## InnoDB 的优点和MyISAM 的特点
+
+**The main differences between INNODB and MYISAM**
+
+The most commonly used storage engine in MySQL are MyISAM and InnoDB.
+
+With these storage engine there are some advantages and disadvantages according to application needs.
+
+As you all know, the default storage engine chosen by MySQL database is InnoDB.
+
+The main difference between MyISAM and INNODB are:
+
+* MyISAM does not support **transactions** by tables while InnoDB supports.
+* There are no possibility of **row-level locking**, relational integrity in MyISAM but with InnoDB this is possible. 
+* InnoDB does not support FULLTEXT index while MyISAM supports.
+* Performance speed of MyISAM table is much higher as compared with tables in InnoDB.
+* InnoDB is better option while you are dealing with larger database because it supports transactions, volume while MyISAM is suitable for small project.
+* As InnoDB supports row-level locking which means inserting and updating is much faster as compared with MyISAM. 
+* InnoDB **supports ACID** (Atomicity, Consistency, Isolation and Durability) property while MyISAM does not support.
+* In InnoDB table, AUTO_INCREMENT field is a part of index.
+* Once table in InnoDB is deleted then it can not re-establish.
+* InnoDB does not save data as table level so while implementation of `select count(*) from table`  will again scan the whole table to calculate the number of rows while **MyISAM save data as table level so you can easily read out the saved row number.**
+* MyISAM does not support FOREIGN-KEY referential-integrity constraints while InnoDB supports.
+
+---
+
+**MyISAM:**
+
+1. MyISAM supports **Table-level Locking**;
+2. MyISAM designed for **need of speed**;
+3. MyISAM **does not support foreign keys** hence we call MySQL with MyISAM is DBMS.
+4. **MyISAM stores its tables, data and indexes in diskspace using separate three different files.** (tablename.FRM, tablename.MYD, tablename.MYI);
+5. **MyISAM not supports transaction.** You cannot commit and rollback with MyISAM. Once you issue a command it's done.
+6. You can use MyISAM, if the table is more static with lots of select and less update and delete.
+
+**InnoDB:**
+
+1. InnoDB supports **Row-level Locking**;
+2. InnoDB designed for **maximum performance when processing high volume of data**;
+3. InnoDB support **foreign keys** hence we call MySQL with InnoDB is RDBMS;
+4. **InnoDB stores its tables and indexes in a tablespace**;
+5. InnoDB supports **transaction**. You can commit and rollback with InnoDB.

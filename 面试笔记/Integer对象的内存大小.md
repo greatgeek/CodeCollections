@@ -40,9 +40,28 @@ Padding ,此处的Padding 需要为4个字节。（**原因：由于HotSpot 虚�
 
 参考：
 
-https://stackoverflow.com/questions/8419860/integer-vs-int-with-regard-to-memory
+[1] https://stackoverflow.com/questions/8419860/integer-vs-int-with-regard-to-memory
 
-https://www.javamex.com/tutorials/memory/object_memory_usage.shtml
+[2] https://www.javamex.com/tutorials/memory/object_memory_usage.shtml
 
-深入理解 Java 虚拟机。
+[3] 深入理解 Java 虚拟机。
+
+## Integer 源码
+
+由于类中的方法都存在方法区，并不会存在实例对象的堆内存中。只有实例字段才会存在于实例对象的堆内存中，也就是内存布局中的 `Instance Data`，实例数据，所以只需要关心类`Integer`中的字段即可。
+
+查看源代码可以发现，Integer 类只有一个实例字段：
+
+```
+    /**
+     * The value of the {@code Integer}.
+     *
+     * @serial
+     */
+    private final int value;
+```
+
+其余都是由 `static`修饰的类字段。类字段不会占用实例对象的内存。
+
+所以实例数据部分只有 `int`类型4个字节。
 
