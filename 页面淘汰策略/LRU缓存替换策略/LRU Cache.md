@@ -28,7 +28,7 @@ cache.get(4);       // returns 4
 
  ## 分析
 
-要求 `get`和`put`操作都要 **O(1) **时间复杂度来完成。`hashMap`天然可以在 **O(1)** 时间复杂度内获取到一个节点。所以使用双向链表+`HashMap` 来完成此此题。
+要求 `get`和`put`操作都要 **O(1) **时间复杂度来完成。`hashMap`天然可以在 **O(1)** 时间复杂度内获取到一个节点。所以使用**双向链表+`HashMap`** 来完成此此题。
 
 ## talk is cheap, show me the code
 
