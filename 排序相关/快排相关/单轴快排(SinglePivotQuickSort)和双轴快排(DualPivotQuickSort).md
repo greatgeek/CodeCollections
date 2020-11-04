@@ -30,12 +30,11 @@ public static void deScanSwapSort(int[] items){
     public static void partition(int[] items,int leftBound, int rightBound){
         if(leftBound < rightBound){
             int pivot = items[rightBound]; // 本例是选取最末尾的元素作为 pivot
-
             int left=leftBound,right=rightBound-1;
             while(left<=right){
                 while(left<=right && items[left] <= pivot) left++;
                 while(left<=right && items[right] > pivot) right--;
-                if(left<=right){
+                if(left<right){
                     swap(items,left,right);
                 }
             }

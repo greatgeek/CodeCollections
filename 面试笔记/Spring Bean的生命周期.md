@@ -4,14 +4,10 @@
 
 1.Spring对Bean进行实例化（相当于程序中的new Xx()）
 
-
-
 2.Spring将值和Bean的引用注入进Bean对应的属性中
 
 3.如果Bean实现了BeanNameAware接口，Spring将Bean的ID传递给setBeanName()方法
 **（实现BeanNameAware清主要是为了通过Bean的引用来获得Bean的ID，一般业务中是很少有用到Bean的ID的**）
-
-
 
 4.如果Bean实现了BeanFactoryAware接口，Spring将调用setBeanDactory(BeanFactory bf)方法并把BeanFactory容器实例作为参数传入。
 **（实现BeanFactoryAware 主要目的是为了获取Spring容器，如Bean通过Spring容器发布事件等）**

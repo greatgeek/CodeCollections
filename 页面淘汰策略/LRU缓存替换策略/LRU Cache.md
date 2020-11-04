@@ -33,8 +33,7 @@ cache.get(4);       // returns 4
 ## talk is cheap, show me the code
 
 ```java
-class LRUCache {
-
+public class LRUCache {
     class CacheNode{
         CacheNode pre;
         CacheNode next;
@@ -70,10 +69,10 @@ class LRUCache {
         CacheNode visNode = map.get(key);
 
         if(visNode==null) return -1;
-        visNode.pre.next=visNode.next;
+        visNode.pre.next=visNode.next;// 从当前链表中断开
         visNode.next.pre=visNode.pre;
 
-        visNode.next=head.next;
+        visNode.next=head.next;// 接到头节点的下一个节点
         head.next.pre=visNode;
         head.next=visNode;
         visNode.pre=head;
@@ -88,13 +87,7 @@ class LRUCache {
             get(key);
         }else {
             if(count>=capacity){
-                CacheNode delNode=tail.pre;
-                tail.pre=delNode.pre;
-                delNode.pre.next=tail;
-                delNode.pre=null;
-                delNode.next=null;
-                map.remove(delNode.key);
-                count--;
+                delete();
             }
             CacheNode visNode=new CacheNode(key,value);
             visNode.next=head.next;
@@ -104,7 +97,16 @@ class LRUCache {
             count++;
             map.put(key,visNode);
         }
+    }
 
+    public void delete(){
+        CacheNode delNode=tail.pre;
+        tail.pre=delNode.pre;
+        delNode.pre.next=tail;
+        delNode.pre=null;
+        delNode.next=null;
+        map.remove(delNode.key);
+        count--;
     }
 }
 
